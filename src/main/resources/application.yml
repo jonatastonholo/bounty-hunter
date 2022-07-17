@@ -1,2 +1,12 @@
 spring.main:
   web-application-type: NONE
+
+core:
+  domain:
+    fizzbuzz:
+      fizz:
+        numberRule: ${FIZZ_NUMBER_RULE:3}
+        expressionRule: ${FIZZ_EXPRESSION_RULE:fizz}
+      buzz:
+        numberRule: ${BUZZ_NUMBER_RULE:5}
+        expressionRule: ${BUZZ_EXPRESSION_RULE:buzz}
