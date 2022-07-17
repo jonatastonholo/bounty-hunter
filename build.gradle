@@ -19,10 +19,21 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework:spring-context:5.3.20'
+    implementation 'org.springframework:spring-webflux:5.3.22'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'io.projectreactor:reactor-tools:3.4.18'
     implementation 'io.projectreactor:reactor-core:3.4.18'
     implementation 'io.projectreactor.tools:blockhound:1.0.6.RELEASE'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.3'
+
+    implementation 'commons-codec:commons-codec:1.15'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
