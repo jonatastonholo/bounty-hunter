@@ -6,17 +6,50 @@ plugins {
 
 group = 'dev.tonholo'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = JavaVersion.VERSION_17
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
+//    implementation 'org.springframework:spring-context:5.3.20'
+//    implementation 'io.projectreactor.netty:reactor-netty-http:1.0.21'
+//    implementation 'io.projectreactor.netty:reactor-netty:1.0.21'
+//    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty:2.7.1'
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'io.projectreactor:reactor-tools:3.4.18'
+    implementation 'io.projectreactor:reactor-core:3.4.18'
+    implementation 'io.projectreactor.tools:blockhound:1.0.6.RELEASE'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.3'
+
+    implementation 'commons-codec:commons-codec:1.15'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
 }
 
 tasks.named('test') {
+    if (JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
+        jvmArgs += [
+                "-XX:+AllowRedefinitionToAddDeleteMethods", // Blockhound's dependency
+                "-XX:+ShowCodeDetailsInExceptionMessages"
+        ]
+    }
     useJUnitPlatform()
 }

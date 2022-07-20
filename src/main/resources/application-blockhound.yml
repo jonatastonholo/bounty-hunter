@@ -1,0 +1,3 @@
+blockHound:
+  enabled: ${BLOCK_HOUND_ENABLED:false}
+  justPrintStackTrace: ${BLOCK_HOUND_JUST_PRINT_STACKTRACE:false}
