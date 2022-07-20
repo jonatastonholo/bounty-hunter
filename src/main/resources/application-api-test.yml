@@ -1,0 +1,7 @@
+spring.config.import:
+  - file:src/main/resources/application.yml
+  - file:src/main/resources/application-blockhound.yml
+  - file:src/main/resources/application-fizzbuzz-api.yml
+  - file:src/main/resources/application-json.yml
+  - file:src/main/resources/application-logs.yml
+  - file:src/main/resources/application-webclient.yml

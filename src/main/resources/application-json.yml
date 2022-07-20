@@ -1,0 +1,10 @@
+spring:
+  jackson:
+    default-property-inclusion: NON_EMPTY
+    date-format: yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ
+    deserialization:
+      fail_on_unknown_properties: false
+
+    serialization:
+      write_dates_as_timestamps: false
+      write_dates_with_zone_id: true

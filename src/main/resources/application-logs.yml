@@ -1,0 +1,20 @@
+logging:
+  level:
+    dev:
+      tonholo: ${LOGLEVEL:INFO}
+
+    web: ${LOGLEVEL_WEB:ERROR}
+
+    io:
+      r2dbc: ${LOGLEVEL_R2DBC:ERROR}
+      netty: ${LOGLEVEL_IO_NETTY:ERROR}
+
+    reactor:
+      netty:
+        http: ${LOGLEVEL_REACTOR_NETTY:ERROR}
+
+    org:
+      springframework:
+        r2dbc: ${LOGLEVEL_R2DBC:ERROR}
+        data:
+          r2dbc: ${LOGLEVEL_R2DBC:ERROR}

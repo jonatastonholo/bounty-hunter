@@ -1,0 +1,12 @@
+fizzBuzzAPI:
+  url: ${FIZZ_BUZZ_API_URL}
+  xApiKey: ${FIZZ_BUZZ_API_X_API_KEY}
+  endpoints:
+    get:
+      fizzBuzz: ${FIZZ_BUZZ_API_GET_FIZZBUZZ}
+      reset: ${FIZZ_BUZZ_API_GET_FIZZBUZZ_RESET}
+      canIHasTreasure: ${FIZZ_BUZZ_API_GET_FIZZBUZZ_CAN_I_HAS_TREASURE}
+    post:
+      fizzBuzz: ${FIZZ_BUZZ_API_POST_FIZZBUZZ}
+    delete:
+      fizzBuzz: ${FIZZ_BUZZ_API_DELETE_FIZZBUZZ}
