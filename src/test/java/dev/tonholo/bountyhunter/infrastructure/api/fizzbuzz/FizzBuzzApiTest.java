@@ -1,6 +1,7 @@
 package dev.tonholo.bountyhunter.infrastructure.api.fizzbuzz;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,6 +18,7 @@ import reactor.test.StepVerifier;
         "classpath:.env/.env.developer.logs",
         "classpath:.env/.env.developer.webclient",
 })
+@Disabled("Disabled to not brake the CI pipeline, because the API credentials will not be synchronized with public repository")
 class FizzBuzzApiTest {
 
     @Autowired
