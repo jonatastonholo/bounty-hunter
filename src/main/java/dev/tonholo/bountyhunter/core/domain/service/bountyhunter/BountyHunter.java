@@ -2,6 +2,7 @@ package dev.tonholo.bountyhunter.core.domain.service.bountyhunter;
 
 import dev.tonholo.bountyhunter.core.domain.fizzbuzz.FizzBuzz;
 import dev.tonholo.bountyhunter.dto.ApiResponseDTO;
+import dev.tonholo.bountyhunter.dto.ApiResponsePuzzleDTO;
 import dev.tonholo.bountyhunter.dto.PuzzleDTO;
 import dev.tonholo.bountyhunter.shared.hash.CommonHash;
 import lombok.RequiredArgsConstructor;
@@ -37,21 +38,28 @@ public class BountyHunter {
             .subscribe();
     }
 
-    private Mono<ApiResponseDTO<String>> runAttempt() {
+    private Mono<ApiResponseDTO> runAttempt() {
         return reset()
                 .doOnNext(__ -> log.info("Initializing the attempt #{} to solve the puzzle", attemptsCounter.incrementAndGet()))
                 .flatMap(__ -> runInteractionsToSolve());
     }
 
-    private Mono<ApiResponseDTO<String>> reset() {
+    private Mono<ApiResponseDTO> reset() {
         log.info("Restarting the algorithm...");
         return bountyHunterApi
                 .reset()
                 .checkpoint("Call reset")
-                .doOnNext(response -> log.info("Reset response -> {}", response));
+                .doOnNext(response -> log.info("Reset response -> {}", response))
+                .map(apiResponseDTO -> {
+                    if (200 != apiResponseDTO.getCode() && 403 != apiResponseDTO.getCode()) {
+                        throw new IllegalStateException("Failed to reset the game");
+                    }
+                    return apiResponseDTO;
+                })
+                ;
     }
 
-    private Mono<ApiResponseDTO<String>> runInteractionsToSolve() {
+    private Mono<ApiResponseDTO> runInteractionsToSolve() {
         return runInteraction()
                 .repeat(() -> terminate.get() || treasuryCollected.get() || (interactionsCounter.get() < interactionsBeforeFailing))
                 .last()
@@ -63,7 +71,7 @@ public class BountyHunter {
             ;
     }
 
-    private Mono<ApiResponseDTO<String>> runInteraction() {
+    private Mono<ApiResponseDTO> runInteraction() {
         return collectPuzzle()
                 .flatMap(this::solvePuzzle)
                 .flatMap(this::sendSolvedPuzzle)
@@ -71,8 +79,8 @@ public class BountyHunter {
             .doOnNext(__ -> log.info("Initializing the interaction #{} to solve the puzzle", interactionsCounter.incrementAndGet()));
     }
 
-    private Mono<ApiResponseDTO<String>> collectTreasure(ApiResponseDTO<PuzzleDTO> stringApiResponseDTO) {
-        final var hash = stringApiResponseDTO.message().hash();
+    private Mono<ApiResponseDTO> collectTreasure(ApiResponsePuzzleDTO apiResponsePuzzleDTO) {
+        final var hash = apiResponsePuzzleDTO.puzzleDTO().hash();
         log.info("Trying collect the treasure for hash [{}]...", hash);
         return bountyHunterApi
                 .collectTreasure(hash)
@@ -81,7 +89,7 @@ public class BountyHunter {
                 .flatMap(treasuryResponse -> checkTreasury(treasuryResponse, hash));
     }
 
-    private Mono<ApiResponseDTO<String>> checkTreasury(ApiResponseDTO<String> treasuryResponse, String hash) {
+    private Mono<ApiResponseDTO> checkTreasury(ApiResponseDTO treasuryResponse, String hash) {
         if (treasuryResponse.isSuccess()) {
             log.info("Treasury collected!!!");
             treasuryCollected.set(true);
@@ -92,7 +100,7 @@ public class BountyHunter {
         return prepareForNextInteraction(hash);
     }
 
-    private Mono<ApiResponseDTO<String>> prepareForNextInteraction(String hash) {
+    private Mono<ApiResponseDTO> prepareForNextInteraction(String hash) {
         log.info("Preparing for the next interaction... Deleting the hash [{}]", hash);
         return bountyHunterApi
                 .deleteLastPuzzle(hash)
@@ -112,13 +120,13 @@ public class BountyHunter {
                 .doOnNext(puzzle -> log.info("Puzzle collected -> {}", puzzle));
     }
 
-    private Mono<ApiResponseDTO<PuzzleDTO>> sendSolvedPuzzle(PuzzleDTO puzzleDTO) {
+    private Mono<ApiResponsePuzzleDTO> sendSolvedPuzzle(PuzzleDTO puzzleDTO) {
         log.info("Sending puzzle solution...");
         return bountyHunterApi
                 .sendPuzzleSolution(puzzleDTO)
                 .map(response -> {
                     log.info("Checking response...");
-                    if (response.isError()) {
+                    if (response.apiResponseDTO().isError()) {
                         terminate.set(true);
                         throw new IllegalStateException("Failed to send puzzle");
                     }

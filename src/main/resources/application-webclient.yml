@@ -1,0 +1,3 @@
+webclient:
+  enabled: ${WEBCLIENT_ENABLED:true}
+  timeoutSeconds: ${WEBCLIENT_TIMEOUT_SECONDS:5}

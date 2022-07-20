@@ -1,3 +1,3 @@
 package dev.tonholo.bountyhunter.infrastructure.api.fizzbuzz.model;
 
-public record Success(String success) {}
+public record Success(Boolean success) {}
